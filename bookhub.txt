@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookStore</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding-top: 70px;
+            background-image: linear-gradient(to right, white, lightgreen);
+        }
+
+        .cart-container {
+            position: fixed;
+            top: 70px;
+            right: 0;
+            width: 300px;
+            background: white;
+            border-left: 2px solid #ccc;
+            height: calc(100vh - 70px);
+            padding: 20px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .navbar-nav {
+            flex-grow: 1;
+            justify-content: start;
+        }
+
+        .nav-item {
+            padding: 2px;
+        }
+
+        .navbar-brand {
+            margin: auto;
+            font-family: "Georgia";
+            font-size: 25px;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .section {
+            display: none;
+            padding: 50px;
+        }
+
+        .home_heading {
+            font-size: 55px;
+            font-family: "roboto";
+            font-weight: bold;
+            color: green;
+        }
+
+        .btn {
+            margin-top: 15px;
+        }
+
+        .book_heading {
+            font-size: 55px;
+            font-family: "roboto";
+            font-weight: bold;
+            color: green;
+        }
+
+        .about_heading {
+            font-size: 55px;
+            font-family: "roboto";
+            font-weight: bold;
+            color: green;
+        }
+
+        .about_para {
+            font-size: 30px;
+            font-family: "italic";
+            font-weight: 500;
+            color: darkgreen;
+        }
+
+        .contact_heading {
+            font-size: 55px;
+            font-family: "roboto";
+            font-weight: bold;
+            color: green;
+        }
+
+        .contact_para {
+            font-size: 25px;
+            font-family: "italic";
+            font-weight: 500;
+            color: darkgreen;
+        }
+
+        .active-section {
+            display: block;
+        }
+
+        .card img {
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .footer {
+            background-color: #343a40;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            text-align: center;
+            width: 100%;
+            padding: 20px 0;
+        }
+
+        .footer a {
+            color: #ffc107;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="#">📚 TheBookHub</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('home')">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('books')">Books</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('about')">About Us</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('contact')">Contact Us</a></li>
+                    </ul>
+                    <button class="btn btn-outline-light" onclick="toggleCart()">🛒 Cart (<span id="cart-count">0</span>)</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section id="home" class="section home_section active-section text-center">
+        <h2 class="home_heading">Uncover Literary Treasures</h2>
+        <button class="btn btn-success" onclick="showSection('books')">Shop Now</button>
+    </section>
+
+    <section id="books" class="section container">
+        <h2 class="text-center book_heading">Book Listing</h2>
+        <br />
+        <div class="row" id="book-list"></div>
+    </section>
+
+    <section id="book-details" class="section container">
+        <h2 id="detail-title" class="text-center"></h2>
+        <p id="detail-author" class="text-center"></p>
+        <p id="detail-description" class="text-center"></p>
+        <button class="btn btn-secondary" onclick="showSection('books')">Back to Books</button>
+    </section>
+
+    <section id="about" class="section text-center">
+        <h2 class="about_heading">About Us</h2>
+        <p class="about_para"> Welcome to BookStore! We offer a wide range of books with great discounts.</p>
+        <p class="about_para">Special Offers: Get up to 30% off on selected books!</p>
+    </section>
+
+    <section id="contact" class="section text-center">
+        <h2 class="contact_heading">Contact Us</h2>
+        <p class="contact_para">Facebook: <a href="#">facebook.com/thebookhub</a></p>
+        <p class="contact_para">X: <a href="#">x.com/thebookhub</a></p>
+        <p class="contact_para">Instagram: <a href="#">instagram.com/thebookhub</a></p>
+        <p class="contact_para">Email: thebookhub@gmail.com</p>
+    </section>
+
+    <footer class="footer text-center">
+        <div class="container">
+            <p>
+                <a href="#" onclick="showSection('about')">About Us</a> |
+                <a href="#" onclick="showSection('contact')">Contact</a> |
+                <a href="#">Privacy Policy</a>
+            </p>
+        </div>
+    </footer>
+
+    <div class="cart-container" id="cart-container">
+        <h2>Shopping Cart</h2>
+        <ul id="cart-items" class="list-group"></ul>
+        <p class="mt-3">Total: ₹<span id="total-price">0</span></p>
+        <button class="btn btn-primary w-100">Buy Now</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let cart = [];
+        const books = [{
+                title: "Letter from the Birmingham Jail",
+                author: "Martin Luther King Jr.",
+                price: 499,
+                rating: 4.5,
+                discount: "10% off",
+                description: "Martin Luther King Jr., during his time in Birmingham jail, wrote a powerful essay against social injustice, Letter from the Birmingham Jail. This essay, inspired by fellow clergymen's letter, focused the world's attention on Birmingham and sparked the March on Washington. It remains a powerful defense of nonviolent demonstration and rallying cry for racial equality.",
+                image: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1332729896i/203899.jpg"
+            },
+            {
+                title: "Calvin and Hobbes",
+                author: "Bill Watterson",
+                price: 699,
+                rating: 4.6,
+                discount: "15% off",
+                description: "This is the first collection of the popular comic strip that features Calvin, a rambunctious 6-year-old boy, and his stuffed tiger, Hobbes, who comes charmingly to life.",
+                image: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1441227694i/77727.jpg"
+            },
+            {
+                title: "A Court of Mist and Fury",
+                author: "Sarah J. Maas",
+                price: 399,
+                rating: 4.6,
+                discount: "5% off",
+                description: "The sequel to Sarah J. Maas's A Court of Thorns and Roses is a captivating story about Feyre, a High Fae granted powers and lifespan, and her struggles to navigate politics, passion, and power. As her marriage to Tamlin approaches, Feyre faces a greater evil and must harness her harrowing gifts to shape her future and the world in turmoil.",
+                image: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1620325671i/50659468.jpg"
+            },
+            {
+                title: "The Nightingale",
+                author: "Kristin Hannah",
+                price: 599,
+                rating: 4.7,
+                discount: "12% off",
+                description: "Vianne Mauriac, a widow in Carriveau, faces the invasion of the Nazis by the Germans. She and her daughter, Isabelle, must live with the enemy or risk their lives. Isabelle, a rebellious 18-year-old, falls in love with Gaëtan, a partisan who believes the French can fight the Nazis from within France. When Gaëtan betrays her, Isabelle joins the Resistance, risking her life to save others.",
+                image: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1681839850i/21853621.jpg"
+
+            },
+            {
+                title: "The Lord of the Rings",
+                author: "Brian Sibley",
+                price: 799,
+                rating: 4.75,
+                discount: "20% off",
+                description: "The 1981 BBC Radio dramatisation of The Lord of the Rings, featuring Ian Holm, Michael Hordern, Robert Stephens, John Le Mesurier, and Peter Woodthorpe, is a classic broadcasting classic. The box set includes The Fellowship of the Ring, The Two Towers, and The Return of the King, with new narration for Frodo Baggins and Stephen Oliver's complete musical score.",
+                image: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1328743992i/3862393.jpg"
+            },
+            {
+                title: "Harry Potter Collection",
+                author: "J.K. Rowling",
+                price: 499,
+                rating: 4.5,
+                discount: "10% off",
+                description: "This luxurious boxed set offers six years of Harry Potter, featuring Harry's early days, adventures with Hermione and Ron, and confrontations with Draco Malfoy and Professor Snape. The set includes the Sorcerer's Stone, Triwizard Tournament, and He-Who-Must-Not-Be-Named.",
+                image: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1328867351i/10.jpg"
+            },
+            {
+                title: "The Sun Does Shine: How I Found Life and Freedom on Death Row",
+                author: "Anthony Ray Hinton, Lara Love Hardin",
+                price: 749,
+                rating: 4.4,
+                discount: "8% off",
+                description: "Anthony Ray Hinton, a young black man, spent thirty years on death row for a crime he didn't commit. Despite being mistakenly accused, he was sentenced to death by electrocution. Despite his despair, Hinton remained a beacon on Death Row, transforming his spirit and fellow inmates. With the help of civil rights attorney Bryan Stevenson, he won his release in 2015. The Sun Does Shine is a testament to the power of hope and the resilience of a man's spirit despite wrongful imprisonment.",
+                image: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1591203630i/34964905.jpg"
+            },
+            {
+                title: "Something Under the Bed is Drooling",
+                author: "Bill Watterson",
+                price: 599,
+                rating: 4.2,
+                discount: "5% off",
+                description: "Calvin is a rambunctious six-year-old whose manic antics threaten world peace. Hobbes is his stuffed tiger who comes alive when adults aren't around. The saga of their daily exploits won cartoonist Bill Watterson the coveted Reuben Award for Outstanding Cartoonist of the Year. Something Under the Bed Is Drooling is a jewel.",
+                image: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1367827530i/17886577.jpg"
+            },
+            {
+                title: "It's a Magical World",
+                author: "Bill Watterson",
+                price: 799,
+                rating: 4.9,
+                discount: "18% off",
+                description: "Bill Watterson's discontinuation of Calvin and Hobbes caused mourning among fans worldwide. However, It's a Magical World offers a return to the beloved characters, including Calvin, his friends, and their parents. The full-color Sundays feature Calvin-turned-firefly, Spaceman Spiff, and Calvin's snowman art, providing a nostalgic experience for Watterson fans.",
+                image: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1437420710i/24814.jpg"
+            },
+            {
+                title: "There's Treasure Everywhere",
+                author: "Bill Watterson",
+                price: 699,
+                rating: 4.7,
+                discount: "10% off",
+                description: "In the world that Calvin and his stuffed tiger Hobbes share, treasures can be found in the most unlikely places, from the outer regions where Spaceman Spiff travels to the rocks in one's own backyard. In the latest cartoon collection from the talented pen of Bill Watterson, this curious duo roams their world ever in search of the fortunes (and misfortunes!) to be experienced. Color & black & white cartoons throughout.",
+                image: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1409957304i/70489.jpg"
+            }
+        ];
+
+        function displayBooks() {
+            const bookList = document.getElementById('book-list');
+            bookList.innerHTML = '';
+            books.forEach((book, index) => {
+                bookList.innerHTML += `
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 p-3 shadow" onclick="showBookDetails(${index})">
+                            <img src="${book.image}" class="card-img-top" alt="${book.title}">
+                            <h3 class="card-title">${book.title}</h3>
+                            <p class="card-text">by ${book.author}</p>
+                            <p class="card-text">Price: ₹${book.price} <span class="text-success">(${book.discount})</span></p>
+                            <p class="card-text">Rating: ⭐${book.rating}</p>
+                            <button class="btn btn-success" onclick="event.stopPropagation(); addToCart('${book.title}', ${book.price})">Add to Cart</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function showBookDetails(index) {
+            const book = books[index];
+            document.getElementById('detail-title').innerText = book.title;
+            document.getElementById('detail-author').innerText = `by ${book.author}`;
+            document.getElementById('detail-description').innerText = book.description;
+            showSection('book-details');
+        }
+
+        function addToCart(book, price) {
+            cart.push({
+                book,
+                price
+            });
+            document.getElementById('cart-count').innerText = cart.length;
+            updateCart();
+        }
+
+        function updateCart() {
+            let cartItems = document.getElementById('cart-items');
+            cartItems.innerHTML = '';
+            let total = 0;
+            cart.forEach((item, index) => {
+                cartItems.innerHTML += `
+                    <li class="list-group-item">
+                        ${item.book} - ₹${item.price}
+                        <button class='btn btn-danger btn-sm float-end' onclick='removeFromCart(${index})'>X</button>
+                    </li>
+                `;
+                total += item.price;
+            });
+            document.getElementById('total-price').innerText = total;
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            document.getElementById('cart-count').innerText = cart.length;
+            updateCart();
+        }
+
+        function toggleCart() {
+            document.getElementById('cart-container').style.display = document.getElementById('cart-container').style.display === 'block' ? 'none' : 'block';
+        }
+
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(section => section.classList.remove('active-section'));
+            document.getElementById(id).classList.add('active-section');
+        }
+
+        displayBooks();
+    </script>
+</body>
+
+</html>
